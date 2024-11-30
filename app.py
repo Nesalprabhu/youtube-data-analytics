@@ -45,8 +45,8 @@ def connect_to_mysql():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Your_password",
-            database="Database_name"
+            password="Vishnu1101",
+            database="youtube"
         )
         return connection
     except mysql.connector.Error as err:
