@@ -1,6 +1,3 @@
-
-
-
 import streamlit as st
 from PIL import Image
 import mysql.connector
@@ -48,8 +45,8 @@ def connect_to_mysql():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Vishnu1101",
-            database="youtube"
+            password="Your_password",
+            database="Database_name"
         )
         return connection
     except mysql.connector.Error as err:
@@ -166,29 +163,29 @@ elif menu == "Query and Visualize Data":
     else:
         st.error("Failed to connect to the database.")
 
-# elif menu == "Visualize the Data":
-#     st.header("Visualize the Data")
-#     connection = connect_to_mysql()
-#     if connection:
-#         cursor = connection.cursor(dictionary=True)
+elif menu == "Visualize the Data":
+    st.header("Visualize the Data")
+    connection = connect_to_mysql()
+    if connection:
+        cursor = connection.cursor(dictionary=True)
 
-#         # Example: Top 10 most viewed videos
-#         cursor.execute("SELECT video_name, view_count FROM videos ORDER BY view_count DESC LIMIT 10;")
-#         results = cursor.fetchall()
-#         df = pd.DataFrame(results)
+        # Example: Top 10 most viewed videos
+        cursor.execute("SELECT video_name, view_count FROM videos ORDER BY view_count DESC LIMIT 10;")
+        results = cursor.fetchall()
+        df = pd.DataFrame(results)
 
-#         # Bar Chart for Most Viewed Videos
-#         if not df.empty:
-#             fig = px.bar(df, x="video_name", y="view_count", title="Top 10 Most Viewed Videos")
-#             st.plotly_chart(fig)
+        # Bar Chart for Most Viewed Videos
+        if not df.empty:
+            fig = px.bar(df, x="video_name", y="view_count", title="Top 10 Most Viewed Videos")
+            st.plotly_chart(fig)
 
-#         # Pie Chart for Video Counts by Channel
-#         cursor.execute("SELECT channel_name, COUNT(video_id) AS video_count FROM videos GROUP BY channel_name;")
-#         results = cursor.fetchall()
-#         df_channel = pd.DataFrame(results)
+        # Pie Chart for Video Counts by Channel
+        cursor.execute("SELECT channel_name, COUNT(video_id) AS video_count FROM videos GROUP BY channel_name;")
+        results = cursor.fetchall()
+        df_channel = pd.DataFrame(results)
 
-#         if not df_channel.empty:
-#             fig = px.pie(df_channel, names="channel_name", values="video_count", title="Video Count by Channel")
-#             st.plotly_chart(fig)
-#     else:
-#         st.error("Failed to connect to the database.")
+        if not df_channel.empty:
+            fig = px.pie(df_channel, names="channel_name", values="video_count", title="Video Count by Channel")
+            st.plotly_chart(fig)
+    else:
+        st.error("Failed to connect to the database.")
