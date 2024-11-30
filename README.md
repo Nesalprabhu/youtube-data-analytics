@@ -1,2 +1,25 @@
-# youtube-data-analytics
-"A Streamlit app for harvesting and warehousing YouTube data using Python and MySQL. Visualize channel stats, video trends, and engagement metrics interactively. Features data storage, API integration, and dynamic dashboards for insights."
+
+Here’s a detailed and professional README.md template for your project. You can customize it further as needed:
+
+YouTube Data Harvesting and Warehousing
+This project is a Streamlit application designed to harvest, store, and analyze YouTube data. The app integrates with the YouTube Data API and MySQL to provide a comprehensive solution for managing and visualizing channel and video statistics.
+
+Features
+Data Harvesting:
+Fetch data like channel details, video statistics, and playlists using the YouTube Data API.
+Data Warehousing:
+Store harvested data in a MySQL database for efficient querying and future analysis.
+Interactive Dashboards:
+Visualize metrics such as total views, likes, comments, and subscriber trends using dynamic charts and graphs.
+User-Friendly Interface:
+Easily navigate through the app with an intuitive UI.
+Technologies Used
+Frontend: Streamlit, Plotly
+Backend: Python
+Database: MySQL
+APIs: YouTube Data API v3
+Python Libraries:
+pandas: Data manipulation
+google-api-python-client: YouTube API integration
+streamlit-option-menu: For app navigation
+mysql-connector-python: Database connectivity
