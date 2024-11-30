@@ -1,5 +1,5 @@
-**"YouTube Data Harvesting and Warehousing"
-**This project is a Streamlit application designed to harvest, store, and analyze YouTube data. The app integrates with the YouTube Data API and MySQL to provide a comprehensive solution for managing and visualizing channel and video statistics.
+"YouTube Data Harvesting and Warehousing"
+This project is a Streamlit application designed to harvest, store, and analyze YouTube data. The app integrates with the YouTube Data API and MySQL to provide a comprehensive solution for managing and visualizing channel and video statistics.
 
 Features
 Data Harvesting:
