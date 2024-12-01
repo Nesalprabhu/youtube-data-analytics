@@ -163,29 +163,125 @@ elif menu == "Query and Visualize Data":
     else:
         st.error("Failed to connect to the database.")
 
-elif menu == "Visualize the Data":
-    st.header("Visualize the Data")
+if menu == "Visualize the Data":
+    st.header("🎥 Visualize YouTube Data 📊")
     connection = connect_to_mysql()
+
     if connection:
-        cursor = connection.cursor(dictionary=True)
+        try:
+            cursor = connection.cursor(dictionary=True)
 
-        # Example: Top 10 most viewed videos
-        cursor.execute("SELECT video_name, view_count FROM videos ORDER BY view_count DESC LIMIT 10;")
-        results = cursor.fetchall()
-        df = pd.DataFrame(results)
+            # Dropdown for Graph Selection
+            graph_options = [
+                "Top 10 Liked Videos",
+                "Subscriber Distribution by Channel",
+                "Videos Published Over Time",
+                "Engagement Analysis (Likes vs. Comments)",
+            ]
+            selected_graph = st.selectbox("Choose a visualization:", graph_options)
 
-        # Bar Chart for Most Viewed Videos
-        if not df.empty:
-            fig = px.bar(df, x="video_name", y="view_count", title="Top 10 Most Viewed Videos")
-            st.plotly_chart(fig)
+            # Graphs Implementation
+            if selected_graph == "Top 10 Liked Videos":
+                st.subheader("👍 Top 10 Liked Videos")
+                cursor.execute("""
+                    SELECT video_name, like_count, comment_count, view_count 
+                    FROM videos 
+                    ORDER BY like_count DESC 
+                    LIMIT 10;
+                """)
+                results = cursor.fetchall()
+                df_liked_videos = pd.DataFrame(results)
 
-        # Pie Chart for Video Counts by Channel
-        cursor.execute("SELECT channel_name, COUNT(video_id) AS video_count FROM videos GROUP BY channel_name;")
-        results = cursor.fetchall()
-        df_channel = pd.DataFrame(results)
+                if not df_liked_videos.empty:
+                    fig_liked_videos = px.bar(
+                        df_liked_videos,
+                        x="video_name",
+                        y="like_count",
+                        text="like_count",
+                        title="Top 10 Liked Videos",
+                        labels={"video_name": "Video Name", "like_count": "Like Count"},
+                        hover_data=["comment_count", "view_count"],
+                    )
+                    fig_liked_videos.update_layout(xaxis_tickangle=-45)
+                    st.plotly_chart(fig_liked_videos)
+                else:
+                    st.warning("No data available for liked videos.")
 
-        if not df_channel.empty:
-            fig = px.pie(df_channel, names="channel_name", values="video_count", title="Video Count by Channel")
-            st.plotly_chart(fig)
+            elif selected_graph == "Subscriber Distribution by Channel":
+                st.subheader("📊 Subscriber Distribution by Channel")
+                cursor.execute("""
+                    SELECT channel_name, channel_subscribers 
+                    FROM channels 
+                    ORDER BY channel_subscribers DESC;
+                """)
+                results = cursor.fetchall()
+                df_subscribers = pd.DataFrame(results)
+
+                if not df_subscribers.empty:
+                    fig_subscribers = px.bar(
+                        df_subscribers,
+                        x="channel_name",
+                        y="channel_subscribers",
+                        text="channel_subscribers",
+                        title="Subscriber Distribution by Channel",
+                        labels={"channel_name": "Channel Name", "channel_subscribers": "Subscriber Count"},
+                        color="channel_subscribers",
+                    )
+                    fig_subscribers.update_layout(xaxis_tickangle=-45)
+                    st.plotly_chart(fig_subscribers)
+                else:
+                    st.warning("No data available for subscriber distribution.")
+
+            elif selected_graph == "Videos Published Over Time":
+                st.subheader("📅 Videos Published Over Time")
+                cursor.execute("""
+                    SELECT DATE(publishedat) AS publish_date, COUNT(video_id) AS video_count 
+                    FROM videos 
+                    GROUP BY publish_date
+                    ORDER BY publish_date;
+                """)
+                results = cursor.fetchall()
+                df_videos_time = pd.DataFrame(results)
+
+                if not df_videos_time.empty:
+                    fig_videos_time = px.line(
+                        df_videos_time,
+                        x="publish_date",
+                        y="video_count",
+                        title="Videos Published Over Time",
+                        labels={"publish_date": "Date", "video_count": "Number of Videos"},
+                    )
+                    st.plotly_chart(fig_videos_time)
+                else:
+                    st.warning("No data available for videos published over time.")
+
+            elif selected_graph == "Engagement Analysis (Likes vs. Comments)":
+                st.subheader("💬 Engagement Analysis: Likes vs. Comments")
+                cursor.execute("""
+                    SELECT video_name, like_count, comment_count 
+                    FROM videos 
+                    WHERE like_count > 0 AND comment_count > 0;
+                """)
+                results = cursor.fetchall()
+                df_engagement = pd.DataFrame(results)
+
+                if not df_engagement.empty:
+                    fig_engagement = px.scatter(
+                        df_engagement,
+                        x="like_count",
+                        y="comment_count",
+                        hover_name="video_name",
+                        title="Engagement Analysis: Likes vs. Comments",
+                        labels={"like_count": "Likes", "comment_count": "Comments"},
+                        size="like_count",
+                        color="comment_count",
+                    )
+                    st.plotly_chart(fig_engagement)
+                else:
+                  st.warning("No data available for engagement analysis.")
+                    
+        except Exception as e:
+            st.error(f"Error: {e}")
     else:
         st.error("Failed to connect to the database.")
+
