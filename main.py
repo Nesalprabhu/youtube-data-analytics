@@ -5,7 +5,7 @@ import re
 # API Key connection to interact with YouTube API
 api_service_name = "youtube"
 api_version = "v3"
-api_key = "AIzaSyClICPiH4_b7DCn3z0tA4c3kPZK0amKZZI"
+api_key = "YOUR_API_KEY"
 youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=api_key)
 
 # Function to retrieve channel information from YouTube
@@ -163,7 +163,7 @@ def connect_to_mysql():
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Vishnu1101"
+            password="PASSWORD"
         )
         mycursor = mydb.cursor()
         mycursor.execute('CREATE DATABASE IF NOT EXISTS youtube')
